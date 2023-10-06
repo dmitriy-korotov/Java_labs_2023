@@ -19,6 +19,12 @@ public class Forest {
         this.m_grasses = new ArrayList<>();
     }
 
+    public Forest(String _dumped_view)
+    {
+        this();
+        constructFromDumpedView(_dumped_view);
+    }
+
 
     public ArrayList<Predator> getPredators() { return m_predators; }
 
@@ -78,5 +84,36 @@ public class Forest {
             result = result.concat("\t" + grass.toString() + "\n");
         }
         return result;
+    }
+
+
+    public String dump()
+    {
+        StringBuilder result = new StringBuilder();
+
+        for (Predator predator : m_predators)
+        {
+            result.append(predator.dump());
+        }
+        for (Herbivore herbivore : m_herbivores)
+        {
+            result.append(herbivore.dump());
+        }
+        for (Tree tree : m_trees)
+        {
+            result.append(tree.dump());
+        }
+        for (Grass grass : m_grasses)
+        {
+            result.append(grass.dump());
+        }
+
+        return result.toString();
+    }
+
+
+    private void constructFromDumpedView(String _dumped_view)
+    {
+        
     }
 }
