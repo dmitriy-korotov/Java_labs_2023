@@ -2,6 +2,7 @@ package Lab2;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
 
 public class Herbivore extends Animal {
 
@@ -15,6 +16,15 @@ public class Herbivore extends Animal {
         this.m_habitat = _habitat;
         this.m_size = _size;
     }
+
+
+    public Herbivore(String _dumped_view)
+    {
+        m_permitted_trees = new HashSet<>();
+        m_permitted_grasses = new HashSet<>();
+        initFromDumpedView(_dumped_view);
+    }
+
 
     void setPermittedTrees(HashSet<TreeType> _permitted_trees) { m_permitted_trees = _permitted_trees; }
 
@@ -51,6 +61,37 @@ public class Herbivore extends Animal {
     }
 
 
+    public String toString()
+    {
+        StringBuilder result = new StringBuilder();
+        result.append("{\n\tID: ").append(super.getID());
+        result.append("\n\tSize: ").append(super.getID());
+
+        if (!m_permitted_trees.isEmpty())
+        {
+            result.append("\n\tPermitted Trees:\n\t{\n");
+            for (TreeType tree_type : m_permitted_trees)
+            {
+                result.append(tree_type == TreeType.LowerTree ? "\t\tLowerTree\n" : "\t\tUpperTree\n");
+            }
+            result.append("\t}");
+        }
+
+        if (!m_permitted_grasses.isEmpty())
+        {
+            result.append("\n\tPermitted Trees:\n\t{\n");
+            for (GrassType grass_type : m_permitted_grasses)
+            {
+                result.append(grass_type == GrassType.LowerGrass ? "\t\tLowerGrass\n" : "\t\tUpperGrass\n");
+            }
+            result.append("\t}");
+        }
+        result.append("\n}");
+
+        return result.toString();
+    }
+
+
     @Override
     public String dump() {
 
@@ -70,5 +111,30 @@ public class Herbivore extends Animal {
         }
 
         return result.toString();
+    }
+
+    @Override
+    public void initFromDumpedView(String _dumped_view)
+    {
+        String[] lines = _dumped_view.split("\n");
+        super.m_id = Integer.parseInt(lines[0]);
+        m_size = Integer.parseInt(lines[1]);
+
+        int i = 3;
+        for (; i < lines.length; i++)
+        {
+            if (!Objects.equals(lines[i], "Upper") && !Objects.equals(lines[i], "Lower"))
+                break;
+            m_permitted_trees.add(TreeType.valueOf(lines[i]));
+        }
+        if (i == lines.length)
+            return;
+
+        for (; i < lines.length; i++)
+        {
+            if (!Objects.equals(lines[i], "Upper") && !Objects.equals(lines[i], "Lower"))
+                break;
+            m_permitted_grasses.add(GrassType.valueOf(lines[i]));
+        }
     }
 }

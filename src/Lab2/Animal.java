@@ -3,7 +3,7 @@ package Lab2;
 public abstract class Animal {
 
     protected Forest m_habitat;
-    private final int m_id;
+    protected int m_id;
     protected int m_size;
 
 
@@ -36,5 +36,7 @@ public abstract class Animal {
 
 
     public abstract String dump();
+
+    public abstract void initFromDumpedView(String _dumped_view);
 
 }

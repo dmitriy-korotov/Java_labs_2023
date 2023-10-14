@@ -2,7 +2,7 @@ package Lab2;
 
 public class Grass extends Plant {
 
-        private final GrassType m_grass_type;
+        private GrassType m_grass_type;
 
 
         public Grass(GrassType _grass_type)
@@ -10,9 +10,16 @@ public class Grass extends Plant {
             this.m_grass_type = _grass_type;
         }
 
+        public Grass(String _dumped_view) { initFromDumpedView(_dumped_view); }
+
 
         public GrassType getType() { return m_grass_type; }
 
+
+        public String toString()
+        {
+                return "{\n\ttype: " + m_grass_type.toString() + "\n}";
+        }
 
         @Override
         public String dump() {
@@ -23,5 +30,12 @@ public class Grass extends Plant {
                 result.append(m_grass_type.toString());
 
                 return result.toString();
+        }
+
+        @Override
+        public void initFromDumpedView(String _dumped_view)
+        {
+                String[] lines = _dumped_view.split("\n");
+                m_grass_type = GrassType.valueOf(lines[0]);
         }
 }

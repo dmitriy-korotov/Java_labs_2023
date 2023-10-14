@@ -11,6 +11,11 @@ public class Predator extends Animal {
         this.m_size = _size;
     }
 
+    public Predator(String _dumped_view)
+    {
+        initFromDumpedView(_dumped_view);
+    }
+
     @Override
     public void findFood() {
         Predator food_predator = null;
@@ -40,6 +45,12 @@ public class Predator extends Animal {
         }
     }
 
+    public String toString()
+    {
+        return "{\n\tID: " + super.getID() + "\n\tSize: " + m_size + "\n}";
+    }
+
+
     @Override
     public String dump() {
         String result = "Animal\n";
@@ -47,6 +58,14 @@ public class Predator extends Animal {
         result += getID() + "\n";
         result += m_size + "\n";
 
-        return null;
+        return result;
+    }
+
+    @Override
+    public void initFromDumpedView(String _dumped_view)
+    {
+        String[] lines = _dumped_view.split("\n");
+        super.m_id = Integer.parseInt(lines[0]);
+        m_size = Integer.parseInt(lines[1]);
     }
 }

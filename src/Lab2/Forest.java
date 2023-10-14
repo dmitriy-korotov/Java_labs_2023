@@ -64,24 +64,38 @@ public class Forest {
     }
 
 
+    public void addNewPredator(String _dumped_view) { m_predators.add(new Predator(_dumped_view)); }
+
+    public void addNewHerbivore(String _dumped_view) { m_herbivores.add(new Herbivore(_dumped_view)); }
+
+    public void addNewGrass(String _dumped_view)
+    {
+        m_grasses.add(new Grass(_dumped_view));
+    }
+
+    public void addNewTree(String _dumped_view)
+    {
+        m_trees.add(new Tree(_dumped_view));
+    }
+
 
     @Override
     public String toString() {
         String result = "Predators:\n";
         for (Predator predator: m_predators) {
-            result = result.concat("\t" + predator.toString() + "\n");
+            result = result.concat(predator.toString() + "\n");
         }
         result += "Herbivores:\n";
         for (Herbivore herbivore: m_herbivores) {
-            result = result.concat("\t" + herbivore.toString() + "\n");
+            result = result.concat(herbivore.toString() + "\n");
         }
         result += "Trees:\n";
         for (Tree tree: m_trees) {
-            result = result.concat("\t" + tree.toString() + "\n");
+            result = result.concat(tree.toString() + "\n");
         }
         result += "Grasses:\n";
         for (Grass grass: m_grasses) {
-            result = result.concat("\t" + grass.toString() + "\n");
+            result = result.concat(grass.toString() + "\n");
         }
         return result;
     }
