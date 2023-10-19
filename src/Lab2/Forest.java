@@ -5,10 +5,14 @@ import java.util.HashSet;
 
 public class Forest {
 
+    private final int m_id;
     private final ArrayList<Predator> m_predators;
     private final ArrayList<Herbivore> m_herbivores;
     private final ArrayList<Tree> m_trees;
     private final ArrayList<Grass> m_grasses;
+
+
+    private static int m_forests_count = 0;
 
 
     public Forest()
@@ -17,6 +21,8 @@ public class Forest {
         this.m_herbivores = new ArrayList<>();
         this.m_trees = new ArrayList<>();
         this.m_grasses = new ArrayList<>();
+
+        m_id = generateID();
     }
 
     public Forest(String _dumped_view)
@@ -25,6 +31,11 @@ public class Forest {
         constructFromDumpedView(_dumped_view);
     }
 
+
+    private int generateID() { return ++m_forests_count; }
+
+
+    public int getID() { return m_id; }
 
     public ArrayList<Predator> getPredators() { return m_predators; }
 
