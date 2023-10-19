@@ -5,7 +5,6 @@ import Common.FileWriter;
 import Common.UserGroup;
 import Lab2.Forest;
 import Lab2.GrassType;
-import Lab2.Predator;
 import Lab2.TreeType;
 import Model.Model;
 import View.Menu;
@@ -13,7 +12,6 @@ import View.Menu;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.CharBuffer;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Properties;
@@ -82,6 +80,9 @@ public class Application {
     {
         m_view_component.showGreetings(m_model_component.getUser().getLogin());
 
+        if (m_model_component.isNeedLogging())
+            m_model_component.getLogger().log("Application started, user: " + m_model_component.getUser().getLogin());
+
         m_is_closed = false;
         while (!m_is_closed)
         {
@@ -98,6 +99,8 @@ public class Application {
     public void close()
     {
         m_is_closed = true;
+        if (m_model_component.isNeedLogging())
+            m_model_component.getLogger().log("Application closed");
     }
 
 
@@ -164,6 +167,9 @@ public class Application {
             if (m_model_component.isNeedLogging())
                 m_model_component.getLogger().log(ex.getMessage());
         }
+
+        if (m_model_component.isNeedLogging())
+            m_model_component.getLogger().log("Read data from Data Base");
     }
 
 
@@ -179,6 +185,9 @@ public class Application {
             if (m_model_component.isNeedLogging())
                 m_model_component.getLogger().log(ex.getMessage());
         }
+
+        if (m_model_component.isNeedLogging())
+            m_model_component.getLogger().log("Write data to Data Base");
     }
 
 
