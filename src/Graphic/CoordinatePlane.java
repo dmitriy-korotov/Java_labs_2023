@@ -1,0 +1,206 @@
+package Graphic;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+
+public class CoordinatePlane extends JComponent {
+
+    private String m_x_title = "X";
+    private String m_y_title = "Y";
+    private Integer m_padding_x = 100;
+    private Integer m_padding_y = 100;
+    private ArrayList<IGraphDrawer2D> m_drawers = new ArrayList<>();
+
+
+    public CoordinatePlane(int _width, int _height)
+    {
+        setSize(_width, _height);
+        setVisible(true);
+    }
+
+    public CoordinatePlane(int _width, int _height, int _left_offset, int _bottom_offset)
+    {
+        this(_width, _height);
+        m_padding_x = _left_offset;
+        m_padding_y = _bottom_offset;
+    }
+
+
+    public void setTitleX(String _x_title) { m_x_title = _x_title; }
+    public void setTitleY(String _y_title) { m_y_title = _y_title; }
+
+    public void addDrawer(IGraphDrawer2D _graph_drawer)
+    {
+        transfomPoints(_graph_drawer);
+        m_drawers.add(_graph_drawer);
+    }
+
+    @Override
+    protected void paintComponent(Graphics _draw_context)
+    {
+        super.paintComponent(_draw_context);
+        Graphics2D ctx = (Graphics2D)_draw_context;
+        ctx.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        drawPlane(ctx);
+
+        for (IGraphDrawer2D drawer:
+             m_drawers) {
+            drawer.draw(ctx);
+        }
+    }
+
+
+    private void drawPlane(Graphics2D _ctx)
+    {
+        _ctx.setColor(Color.GRAY);
+        _ctx.fillRect(m_padding_x, 0, getWidth() - m_padding_x, getHeight() - m_padding_y);
+
+        _ctx.fillRect(m_padding_x, 0, 5, getHeight() - m_padding_y);
+
+        drawGrid(_ctx, 50);
+
+        drawAxisX(_ctx, m_padding_x, m_padding_y, getWidth() - m_padding_x);
+        drawAxisY(_ctx, m_padding_x, m_padding_y, getHeight() - m_padding_y);
+
+        drawValues(_ctx, 5);
+    }
+
+
+    private void drawAxisX(Graphics2D _ctx, int _x, int _y, int _length)
+    {
+        _ctx.setColor(Color.BLACK);
+
+        int line_width = 6;
+        int line_end_x = _x + _length;
+        int line_end_y = getHeight() - _y;
+        _ctx.fillRect(_x, getHeight() - _y, _length, line_width);
+        Polygon cross = new Polygon(new int[]{line_end_x - 50, line_end_x - 50, line_end_x},
+                                    new int[]{line_end_y - 12,
+                                              line_end_y + 12 + line_width / 2,
+                                              line_end_y + line_width / 2},
+                                    3);
+
+        Font font = new Font("Arial", 3, 30);
+        _ctx.setFont(font);
+        _ctx.drawString(m_x_title, line_end_x - 50, line_end_y + 50);
+
+        _ctx.fillPolygon(cross);
+    }
+
+
+    private void drawAxisY(Graphics2D _ctx, int _x, int _y, int _length)
+    {
+        _ctx.setColor(Color.BLACK);
+
+        int line_width = 6;
+        int line_end_x = _x;
+        int line_end_y = getHeight() - _y - _length;
+        _ctx.fillRect(_x, line_end_y, line_width, _length);
+        Polygon cross = new Polygon(new int[]{line_end_x - 12,
+                                              line_end_x + 12 + line_width / 2,
+                                              line_end_x + line_width / 2},
+                                    new int[]{line_end_y + 50,
+                                              line_end_y + 50,
+                                              line_end_y},
+                3);
+
+        Font font = new Font("Arial", 3, 30);
+        _ctx.setFont(font);
+        _ctx.drawString(m_y_title, line_end_x - 50, line_end_y + 50);
+
+        _ctx.fillPolygon(cross);
+    }
+
+
+    private void drawValues(Graphics2D _ctx, int _count)
+    {
+        Double max_x = Double.MIN_VALUE;
+        Double max_y = Double.MIN_VALUE;
+        for (IGraphDrawer2D drawer:
+             m_drawers) {
+            max_x = Math.max(max_x, drawer.getMaxCoordinateX());
+            max_y = Math.max(max_y, drawer.getMaxCoordinateY());
+        }
+
+        Double step_x_val = (max_x / (double) _count);
+        Double step_y_val = (max_y / (double) _count);
+
+        Integer step_x_coord = (int)((getWidth() - m_padding_x) / _count);
+        Integer step_y_coord = (int)((getHeight() - m_padding_x) / _count);
+
+        Double x_val = 0.;
+        Double y_val = 0.;
+        Integer x_coord = m_padding_x;
+        Integer y_coord = getHeight() - m_padding_y;
+
+        Font font = new Font("Arial", 3, 15);
+        _ctx.setFont(font);
+
+        for (int i = 0; i < _count; i++)
+        {
+            _ctx.drawString(x_val.toString().substring(0, 3), x_coord, getHeight() - m_padding_y + 30);
+            _ctx.drawString(y_val.toString().substring(0, 3), m_padding_x - 30, y_coord);
+
+            x_val += step_x_val;
+            y_val += step_y_val;
+
+            x_coord += step_x_coord;
+            y_coord -= step_y_coord;
+        }
+
+        x_coord = m_padding_x;
+        y_coord = getHeight() - m_padding_y;
+
+        int scale = 10;
+
+        step_x_coord /= scale;
+        step_y_coord /= scale;
+
+        for (int i = 0; i < _count * scale; i++)
+        {
+            int coll_hegiht = (i % scale) == 0 ? 15 : 10;
+            int coll_width = (i % scale) == 0 ? 3 : 3;
+
+            _ctx.fillRect(x_coord, getHeight() - m_padding_y - coll_hegiht + 5, coll_width, coll_hegiht - 5);
+
+            _ctx.fillRect(m_padding_x, y_coord, coll_hegiht, coll_width);
+
+            x_coord += step_x_coord;
+            y_coord -= step_y_coord;
+        }
+    }
+
+
+    private void drawGrid(Graphics2D _ctx, int _step)
+    {
+        _ctx.setColor(Color.WHITE);
+
+        int start = m_padding_x + _step;
+        for (; start < getWidth(); start += _step)
+            _ctx.drawLine(start, getHeight() - m_padding_y, start, 0);
+
+        start = getHeight() - m_padding_y - _step;
+        for (; start > 0; start -= _step)
+            _ctx.drawLine(m_padding_x, start, getWidth(), start);
+    }
+
+
+
+    private void transfomPoints(IGraphDrawer2D _drawer)
+    {
+        double max_x = _drawer.getMaxCoordinateX();
+        double max_y = _drawer.getMaxCoordinateX();
+
+        for (Point point:
+                _drawer.getPoints()) {
+
+            point.x = (int)(point.x / max_x * (getWidth() - m_padding_x ));
+            point.y = (int)(point.y / max_y * (getHeight() - m_padding_y ));
+
+            point.x += m_padding_x;
+            point.y = getHeight() - point.y - m_padding_y;
+        }
+    }
+}

@@ -1,10 +1,17 @@
 import Common.Logger;
+import Graphic.*;
+import Graphic.SwingUIContext;
+import Graphic.Window;
 import Lab2.Forest;
 import Lab2.ForestObjectsCreator;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.jar.JarEntry;
 import java.util.random.RandomGenerator;
+
+
 
 public class Main {
 
@@ -154,7 +161,7 @@ public class Main {
 
     public static void main(String[] args)
     {
-        m_logger.log("Application started");
+        /*m_logger.log("Application started");
 
         ArrayList<Forest> forests = new ArrayList<>();
 
@@ -165,6 +172,30 @@ public class Main {
         testArrayListCollection(forests, testing_sizes);
         testHashMapCollection(forests_map, testing_sizes);
 
-        m_logger.log("\n\nApplication closed");
+        m_logger.log("\n\nApplication closed");*/
+
+
+        SwingUIContext context = new SwingUIContext();
+        context.run(new Runnable() {
+            @Override
+            public void run() {
+                Window window = new Window("Graph", 1024, 720);
+
+                CoordinatePlane coordinatePlane = new CoordinatePlane(window.getWidth(), window.getHeight());
+
+                ArrayList<Point> points = new ArrayList<>() {};
+                points.add(new Point(1, 1));
+                points.add(new Point(2, 0));
+                points.add(new Point(4, 8));
+                points.add(new Point(5, 5));
+                points.add(new Point(6, 3));
+
+                GraphDrawerLines2D drawer = new GraphDrawerLines2D(points);
+                coordinatePlane.addDrawer(drawer);
+
+                window.add(coordinatePlane);
+
+            }
+        });
     }
 }
