@@ -1,4 +1,5 @@
 import Common.Logger;
+import Common.Pair;
 import Graphic.*;
 import Graphic.SwingUIContext;
 import Graphic.Window;
@@ -36,7 +37,7 @@ public class Main {
     }
 
 
-    public static void fillArrayListCollection(ArrayList<Forest> _forests, int _size)
+    public static Pair<Long, Long> fillArrayListCollection(ArrayList<Forest> _forests, int _size)
     {
         m_logger.rawLog("\n\n ARRAY LIST   SIZE - " + _size + "\n\n");
 
@@ -52,18 +53,18 @@ public class Main {
             long duration = after - before;
 
             total_time += duration;
-
-            m_logger.rawLog("ADD; ID = " + forest.getID() + "; TIME = " + duration);
         }
 
         m_logger.rawLog("\nOperation ADD Total count = " + _size);
-        m_logger.rawLog("\nOperation ADD Total time = " + total_time);
-        m_logger.rawLog("\nOperation ADD Medium time = " + (total_time / _size));
+        m_logger.rawLog("\nOperation ADD Total time = " + total_time / 1000);
+        m_logger.rawLog("\nOperation ADD Medium time = " + (total_time / 1000 / _size));
+
+        return new Pair<Long, Long>(total_time / 1000, total_time / 1000 / _size);
     }
 
 
 
-    public static void removeFromArrayListCollection(ArrayList<Forest> _forests, int _count)
+    public static Pair<Long, Long> removeFromArrayListCollection(ArrayList<Forest> _forests, int _count)
     {
         long total_time = 0;
 
@@ -77,18 +78,18 @@ public class Main {
             long duration = after - before;
 
             total_time += duration;
-
-            m_logger.rawLog("REMOVE; ID = " + delited_idx + "; TIME = " + duration);
         }
 
         m_logger.rawLog("\nOperation REMOVE Total count = " + _count);
-        m_logger.rawLog("\nOperation REMOVE Total time = " + total_time);
-        m_logger.rawLog("\nOperation REMOVE Medium time = " + (total_time / _count));
+        m_logger.rawLog("\nOperation REMOVE Total time = " + total_time / 1000);
+        m_logger.rawLog("\nOperation REMOVE Medium time = " + (total_time / 1000 / _count));
+
+        return new Pair<Long, Long>(total_time / 1000, total_time / 1000 / _count);
     }
 
 
 
-    public static void fillHashMapCollection(HashMap<String, Forest> _forests, int _size)
+    public static Pair<Long, Long> fillHashMapCollection(HashMap<String, Forest> _forests, int _size)
     {
         m_logger.rawLog("\n\n HASH MAP   SIZE - " + _size + "\n\n");
 
@@ -104,18 +105,18 @@ public class Main {
             long duration = after - before;
 
             total_time += duration;
-
-            m_logger.rawLog("ADD; ID = " + forest.getID() + "; TIME = " + duration);
         }
 
         m_logger.rawLog("\nOperation ADD Total count = " + _size);
-        m_logger.rawLog("\nOperation ADD Total time = " + total_time);
-        m_logger.rawLog("\nOperation ADD Medium time = " + (total_time / _size));
+        m_logger.rawLog("\nOperation ADD Total time = " + total_time / 1000);
+        m_logger.rawLog("\nOperation ADD Medium time = " + (total_time / 1000 / _size));
+
+        return new Pair<Long, Long>(total_time / 1000, total_time / 1000 / _size);
     }
 
 
 
-    public static void removeFromHashMapCollection(HashMap<String, Forest> _forests, int _count)
+    public static Pair<Long, Long> removeFromHashMapCollection(HashMap<String, Forest> _forests, int _count)
     {
         long total_time = 0;
 
@@ -129,13 +130,13 @@ public class Main {
             long duration = after - before;
 
             total_time += duration;
-
-            m_logger.rawLog("REMOVE; ID = " + delited_idx + "; TIME = " + duration);
         }
 
         m_logger.rawLog("\nOperation REMOVE Total count = " + _count);
-        m_logger.rawLog("\nOperation REMOVE Total time = " + total_time);
-        m_logger.rawLog("\nOperation REMOVE Medium time = " + (total_time / _count));
+        m_logger.rawLog("\nOperation REMOVE Total time = " + total_time / 1000);
+        m_logger.rawLog("\nOperation REMOVE Medium time = " + (total_time / 1000 / _count));
+
+        return new Pair<Long, Long>(total_time / 1000, total_time / 1000 / _count);
     }
 
 
@@ -179,19 +180,36 @@ public class Main {
         context.run(new Runnable() {
             @Override
             public void run() {
-                Window window = new Window("Graph", 1024, 720);
+
+                ArrayList<Forest> forests = new ArrayList<>();
+
+                HashMap<String, Forest> forests_map = new HashMap<>();
+
+                Window window = new Window("Graph", 1200, 720);
+                window.setResizable(false);
+
+                int[] testing_sizes = new int[]{5, 10, 100, 1000, 10000};
 
                 CoordinatePlane coordinatePlane = new CoordinatePlane(window.getWidth(), window.getHeight());
 
-                ArrayList<Point> points = new ArrayList<>() {};
-                points.add(new Point(1, 1));
-                points.add(new Point(2, 0));
-                points.add(new Point(4, 8));
-                points.add(new Point(5, 5));
-                points.add(new Point(6, 3));
+                ArrayList<Point> total_points = new ArrayList<>() {};
+                ArrayList<Point> average_points = new ArrayList<>() {};
 
-                GraphDrawerLines2D drawer = new GraphDrawerLines2D(points);
-                coordinatePlane.addDrawer(drawer);
+                for (int size:
+                     testing_sizes) {
+                    var pair = fillArrayListCollection(forests, size);
+
+                    total_points.add(new Point(size, pair.first.intValue()));
+
+                    average_points.add(new Point(size, pair.second.intValue()));
+                }
+
+                GraphDrawerLines2D total_drawer = new GraphDrawerLines2D(total_points);
+                GraphDrawerLines2D average_drawer = new GraphDrawerLines2D(average_points);
+                average_drawer.setColor(Color.GREEN);
+
+                coordinatePlane.addDrawer(total_drawer);
+                coordinatePlane.addDrawer(average_drawer);
 
                 window.add(coordinatePlane);
 

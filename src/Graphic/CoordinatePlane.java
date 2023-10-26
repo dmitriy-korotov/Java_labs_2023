@@ -8,8 +8,10 @@ public class CoordinatePlane extends JComponent {
 
     private String m_x_title = "X";
     private String m_y_title = "Y";
-    private Integer m_padding_x = 100;
+    private Integer m_padding_x = 200;
     private Integer m_padding_y = 100;
+    private Double m_max_x_value = Double.MIN_VALUE;
+    private Double m_max_y_value = Double.MIN_VALUE;
     private ArrayList<IGraphDrawer2D> m_drawers = new ArrayList<>();
 
 
@@ -32,6 +34,8 @@ public class CoordinatePlane extends JComponent {
 
     public void addDrawer(IGraphDrawer2D _graph_drawer)
     {
+        m_max_x_value = Math.max(_graph_drawer.getMaxCoordinateX(), m_max_x_value);
+        m_max_y_value = Math.max(_graph_drawer.getMaxCoordinateY(), m_max_y_value);
         transfomPoints(_graph_drawer);
         m_drawers.add(_graph_drawer);
     }
@@ -116,13 +120,8 @@ public class CoordinatePlane extends JComponent {
 
     private void drawValues(Graphics2D _ctx, int _count)
     {
-        Double max_x = Double.MIN_VALUE;
-        Double max_y = Double.MIN_VALUE;
-        for (IGraphDrawer2D drawer:
-             m_drawers) {
-            max_x = Math.max(max_x, drawer.getMaxCoordinateX());
-            max_y = Math.max(max_y, drawer.getMaxCoordinateY());
-        }
+        Double max_x = m_max_x_value;
+        Double max_y = m_max_y_value;
 
         Double step_x_val = (max_x / (double) _count);
         Double step_y_val = (max_y / (double) _count);
@@ -140,8 +139,8 @@ public class CoordinatePlane extends JComponent {
 
         for (int i = 0; i < _count; i++)
         {
-            _ctx.drawString(x_val.toString().substring(0, 3), x_coord, getHeight() - m_padding_y + 30);
-            _ctx.drawString(y_val.toString().substring(0, 3), m_padding_x - 30, y_coord);
+            _ctx.drawString(String.format("%.1f", x_val), x_coord, getHeight() - m_padding_y + 30);
+            _ctx.drawString(String.format("%.1f", y_val), m_padding_x - String.format("%.1f", y_val).length() * 10, y_coord);
 
             x_val += step_x_val;
             y_val += step_y_val;
@@ -191,13 +190,13 @@ public class CoordinatePlane extends JComponent {
     private void transfomPoints(IGraphDrawer2D _drawer)
     {
         double max_x = _drawer.getMaxCoordinateX();
-        double max_y = _drawer.getMaxCoordinateX();
+        double max_y = _drawer.getMaxCoordinateY();
 
         for (Point point:
                 _drawer.getPoints()) {
 
-            point.x = (int)(point.x / max_x * (getWidth() - m_padding_x ));
-            point.y = (int)(point.y / max_y * (getHeight() - m_padding_y ));
+            point.x = (int)(point.x / max_x * (getWidth() - m_padding_x - 50 )) + 15;
+            point.y = (int)(point.y / max_y * (getHeight() - m_padding_y - 15 )) + 15;
 
             point.x += m_padding_x;
             point.y = getHeight() - point.y - m_padding_y;
