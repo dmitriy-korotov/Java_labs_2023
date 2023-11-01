@@ -6,6 +6,7 @@ import Graphic.Window;
 import Lab2.Forest;
 import Lab2.ForestObjectsCreator;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -182,7 +183,6 @@ public class Main {
             public void run() {
 
                 ArrayList<Forest> forests = new ArrayList<>();
-
                 HashMap<String, Forest> forests_map = new HashMap<>();
 
                 Window window = new Window("Graph", 1200, 720);

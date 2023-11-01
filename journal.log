@@ -6,9 +6,9 @@
 
 Operation ADD Total count = 5
 
-Operation ADD Total time = 39177
+Operation ADD Total time = 43870
 
-Operation ADD Medium time = 7835
+Operation ADD Medium time = 8774
 
 
  ARRAY LIST   SIZE - 10
@@ -17,9 +17,9 @@ Operation ADD Medium time = 7835
 
 Operation ADD Total count = 10
 
-Operation ADD Total time = 10433
+Operation ADD Total time = 12997
 
-Operation ADD Medium time = 1043
+Operation ADD Medium time = 1299
 
 
  ARRAY LIST   SIZE - 100
@@ -28,9 +28,9 @@ Operation ADD Medium time = 1043
 
 Operation ADD Total count = 100
 
-Operation ADD Total time = 41214
+Operation ADD Total time = 39271
 
-Operation ADD Medium time = 412
+Operation ADD Medium time = 392
 
 
  ARRAY LIST   SIZE - 1000
@@ -39,9 +39,9 @@ Operation ADD Medium time = 412
 
 Operation ADD Total count = 1000
 
-Operation ADD Total time = 137631
+Operation ADD Total time = 147308
 
-Operation ADD Medium time = 137
+Operation ADD Medium time = 147
 
 
  ARRAY LIST   SIZE - 10000
@@ -50,6 +50,6 @@ Operation ADD Medium time = 137
 
 Operation ADD Total count = 10000
 
-Operation ADD Total time = 1135220
+Operation ADD Total time = 1080686
 
-Operation ADD Medium time = 113
+Operation ADD Medium time = 108
